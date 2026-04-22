@@ -1,205 +1,270 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>TES — Trading Execution System</title>
-<link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TES Trader">
-<meta name="application-name" content="TES Trader">
-<meta name="msapplication-TileColor" content="#0b1a2b">
-<meta name="theme-color" content="#0b1a2b">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjM2IiBmaWxsPSIjMGIxYTJiIi8+PHRleHQgeD0iOTAiIHk9IjExNSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNzIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNmMGI0MjkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRFUzwvdGV4dD48L3N2Zz4=">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0b0f17" />
+<title>FX Edge — Trading Journal & Macro Engine</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<!-- SPLASH -->
+<div id="screen-splash" class="screen active">
+  <div class="splash-wrap">
+    <div class="logo-mark">FX</div>
+    <h1>FX Edge</h1>
+    <p class="muted">Loading your trading desk…</p>
+    <div class="spinner"></div>
+  </div>
+</div>
 
-<!-- LOCKED SCREEN (subscription required) -->
-<div id="screen-locked">
+<!-- AUTH -->
+<div id="screen-auth" class="screen">
+  <div class="auth-card">
+    <div class="logo-mark small">FX</div>
+    <h2 id="auth-title">Welcome back</h2>
+    <p class="muted" id="auth-sub">Login to continue</p>
+
+    <div class="tab-row">
+      <button class="tab active" data-tab="login">Login</button>
+      <button class="tab" data-tab="signup">Sign Up</button>
+    </div>
+
+    <div id="login-form" class="form-block">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com" />
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" />
+      <button class="btn primary full" id="btn-login">Login</button>
+    </div>
+
+    <div id="signup-form" class="form-block hidden">
+      <label>Full Name</label>
+      <input type="text" id="signup-name" placeholder="John Trader" />
+      <label>Email</label>
+      <input type="email" id="signup-email" placeholder="you@example.com" />
+      <label>Password</label>
+      <input type="password" id="signup-password" placeholder="min 6 chars" />
+      <button class="btn primary full" id="btn-signup">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCKED -->
+<div id="screen-locked" class="screen">
   <div class="locked-wrap">
-    <div class="locked-icon">🔒</div>
-    <h1 class="locked-h">Unlock TES Pro</h1>
-    <p class="locked-sub">Full institutional trading system — journal, analytics, macro engine, currency strength, risk calculator and more.</p>
-    <div id="locked-expiry-note"></div>
-    <div class="locked-feats">
-      <div class="locked-feat">Pre-Trade Discipline Checklist</div>
-      <div class="locked-feat">Trade Journal</div>
-      <div class="locked-feat">Automatic Currency Strength Engine</div>
-      <div class="locked-feat">Auto Trade Suggestions (Top 3)</div>
-      <div class="locked-feat">Risk % Lot Size Calculator</div>
-      <div class="locked-feat">Performance Analytics</div>
-    </div>
-    <div class="price-cards">
-      <div class="price-card"><div class="price-amt" id="price-monthly">$15 / month</div><div class="price-lbl">Billed monthly</div></div>
-      <div class="price-card"><div class="price-amt" id="price-annual">$120 / year</div><div class="price-lbl">Save 33% vs monthly</div></div>
-    </div>
-    <button id="btn-paystack-monthly" class="btn-paystack" onclick="initiatePaystack('monthly')">💳 Subscribe Monthly</button>
-    <button id="btn-paystack-annual" class="btn-paystack annual" onclick="initiatePaystack('annual')">💎 Subscribe Annually (Best Value)</button>
-    <p id="locked-email"></p>
-    <br/>
-    <button class="btn-text-sm" onclick="doLogout()">Sign out</button>
-  </div>
-</div>
+    <div class="logo-mark">FX</div>
+    <h2>Unlock FX Edge</h2>
+    <p class="muted">Choose a plan to access the full trading suite.</p>
 
-<!-- AUTH SCREEN (Firebase) -->
-<div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <div class="logo-mark">TES</div>
-      <div class="logo-sub">Trading Execution System</div>
+    <div class="plan-grid">
+      <div class="plan-card" data-plan="monthly">
+        <h3>Monthly</h3>
+        <div class="price">$15<span>/mo</span></div>
+        <ul>
+          <li>Macro Bias Engine</li>
+          <li>Currency Strength</li>
+          <li>Trade Journal</li>
+          <li>Risk Calculator</li>
+        </ul>
+        <button class="btn primary full" data-buy="monthly">Subscribe Monthly</button>
+      </div>
+      <div class="plan-card featured" data-plan="annual">
+        <div class="badge">SAVE 33%</div>
+        <h3>Annual</h3>
+        <div class="price">$120<span>/yr</span></div>
+        <ul>
+          <li>Everything in Monthly</li>
+          <li>Priority Support</li>
+          <li>Export PDF / CSV</li>
+          <li>Auto Trade Signals</li>
+        </ul>
+        <button class="btn primary full" data-buy="annual">Subscribe Annually</button>
+      </div>
     </div>
-    <div class="auth-card">
-      <div class="auth-tabs">
-        <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
-        <div class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</div>
-      </div>
-      <div class="auth-form active" id="login-form">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-input" id="login-email" placeholder="your@email.com" autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-input" id="login-pass" placeholder="Password" autocomplete="current-password">
-        </div>
-        <div class="auth-error" id="login-error"></div>
-        <button class="btn-auth" onclick="doLogin()">Login →</button>
-      </div>
-      <div class="auth-form" id="signup-form">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-input" id="signup-email" placeholder="your@email.com" autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label>Password (min 6 chars)</label>
-          <input type="password" class="form-input" id="signup-pass" placeholder="Choose password" autocomplete="new-password">
-        </div>
-        <div class="auth-error" id="signup-error"></div>
-        <button class="btn-auth" onclick="doSignup()">Create Account →</button>
-      </div>
+
+    <div class="mode-row">
+      <label class="switch">
+        <input type="checkbox" id="test-mode-toggle" checked />
+        <span>Test Mode (simulate payment)</span>
+      </label>
+      <button class="btn ghost" id="btn-logout-locked">Logout</button>
     </div>
   </div>
 </div>
 
-<!-- APP WRAPPER (main trading app) -->
-<div id="app" style="display:none;">
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-mark tiny">FX</div>
+      <span>FX Edge</span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-view="dashboard">Dashboard</button>
+      <button class="nav-tab" data-view="macro">Macro</button>
+      <button class="nav-tab" data-view="strength">Strength</button>
+      <button class="nav-tab" data-view="journal">Journal</button>
+      <button class="nav-tab" data-view="risk">Risk Calc</button>
+    </nav>
+    <div class="top-right">
+      <span id="user-email" class="muted"></span>
+      <button class="btn ghost sm" id="btn-logout">Logout</button>
+    </div>
+  </header>
 
-  <!-- BOTTOM NAV -->
-  <nav id="bottom-nav">
-    <div class="nav-item active" onclick="goPage('dashboard')" data-page="dashboard">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      <span>Home</span>
-    </div>
-    <div class="nav-item" onclick="goPage('checklist')" data-page="checklist">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-      <span>Checklist</span>
-    </div>
-    <div class="nav-item" onclick="goPage('journal')" data-page="journal">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-      <span>Journal</span>
-    </div>
-    <div class="nav-item" onclick="goPage('analytics')" data-page="analytics">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <span>Analytics</span>
-    </div>
-    <div class="nav-item" onclick="goPage('fundamentals')" data-page="fundamentals">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-      <span>Macro</span>
-    </div>
-    <div class="nav-item" onclick="goPage('trainer')" data-page="trainer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <span>Trainer</span>
-    </div>
-    <div class="nav-item" onclick="goPage('settings')" data-page="settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      <span>Settings</span>
-    </div>
-  </nav>
-
-  <!-- DASHBOARD PAGE -->
-  <div class="page active" id="page-dashboard">
-    <div class="page-header">
-      <div>
-        <div class="page-title" id="dash-greeting">Good morning ⚡</div>
-        <div class="page-subtitle" id="dash-date"></div>
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <h2>Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat"><div class="label">Total Trades</div><div class="value" id="stat-trades">0</div></div>
+        <div class="stat"><div class="label">Win Rate</div><div class="value" id="stat-winrate">0%</div></div>
+        <div class="stat"><div class="label">Avg R:R</div><div class="value" id="stat-rr">0.00</div></div>
+        <div class="stat"><div class="label">Net R</div><div class="value" id="stat-netr">0.00</div></div>
       </div>
-      <div class="header-badge" id="dash-user-badge">TES</div>
-    </div>
-    <!-- Subscription info row -->
-    <div id="sub-info-row" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); border-radius:12px; padding:8px 12px; margin-bottom:16px;">
-      <span id="tb-days" style="font-size:12px; font-weight:600; color:var(--gold);"></span>
-      <button id="btn-renew" class="btn btn-primary btn-sm" onclick="goPage('settings'); showToast('Go to subscription section','')" style="display:none;">Renew</button>
-    </div>
 
-    <div class="discipline-banner" id="daily-quote">"The goal of a successful trader is to make the best trades. <strong>Money is secondary.</strong>" — Alexander Elder</div>
-
-    <div class="streak-banner">
-      <div class="streak-fire">🔥</div>
-      <div class="streak-info"><div class="streak-num" id="streak-num">0</div><div class="streak-lbl">Day Streak</div></div>
-      <div class="streak-msg" id="streak-msg">Complete a checklist today to start your streak!</div>
-    </div>
-
-    <div class="stat-grid">
-      <div class="stat-box"><div class="stat-val" id="dash-total">0</div><div class="stat-lbl">Trades</div></div>
-      <div class="stat-box"><div class="stat-val" id="dash-winrate">0%</div><div class="stat-lbl">Win Rate</div></div>
-      <div class="stat-box"><div class="stat-val" id="dash-rr">0.0</div><div class="stat-lbl">Avg R:R</div></div>
-    </div>
-
-    <div class="card card-sm" id="weekly-bias-summary" style="display:none"><div class="card-header"><div class="card-title">Weekly Bias</div><div class="badge badge-gold">Active</div></div><div id="weekly-bias-pills"></div></div>
-
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:12px;">Quick Access</div>
-    <div class="quick-grid">
-      <div class="quick-btn" onclick="goPage('checklist')"><div class="qb-icon" style="background:rgba(0,200,150,0.12);color:var(--green);">✓</div><div class="qb-text"><div class="qb-title">Pre-Trade</div><div class="qb-sub">Checklist</div></div></div>
-      <div class="quick-btn" onclick="goPage('journal')"><div class="qb-icon" style="background:var(--gold-glow);color:var(--gold);">📓</div><div class="qb-text"><div class="qb-title">Log Trade</div><div class="qb-sub">Journal</div></div></div>
-      <div class="quick-btn" onclick="goPage('fundamentals')"><div class="qb-icon" style="background:var(--blue-dim);color:var(--blue);">🌍</div><div class="qb-text"><div class="qb-title">Macro Bias</div><div class="qb-sub">Fundamentals</div></div></div>
-      <div class="quick-btn" onclick="goPage('trainer')"><div class="qb-icon" style="background:rgba(155,92,246,0.12);color:var(--purple);">🎯</div><div class="qb-text"><div class="qb-title">Zone Quiz</div><div class="qb-sub">Trainer</div></div></div>
-    </div>
-
-    <!-- RISK CALCULATOR (from App B) -->
-    <div class="card" style="margin-top:8px;">
-      <div class="card-title">🧮 Risk % Lot Size Calculator</div>
-      <div class="rc-grid">
-        <div class="form-group-inner"><label>Account Balance ($)</label><input id="rc-balance" type="number" placeholder="10000" step="100"></div>
-        <div class="form-group-inner"><label>Risk %</label><input id="rc-risk" type="number" placeholder="1" step="0.1" min="0.1" max="10"></div>
-        <div class="form-group-inner"><label>Entry Price</label><input id="rc-entry" type="number" placeholder="1.23456" step="0.00001"></div>
-        <div class="form-group-inner"><label>Stop Loss Price</label><input id="rc-sl" type="number" placeholder="1.23200" step="0.00001"></div>
-        <div class="form-group-inner"><label>Take Profit <small>(optional)</small></label><input id="rc-tp" type="number" placeholder="1.24000" step="0.00001"></div>
+      <div class="panel">
+        <h3>Auto Trade Suggestions</h3>
+        <p class="muted">Generated from current currency strength ranking.</p>
+        <div id="suggestions-list" class="suggestions"></div>
       </div>
-      <div id="rc-result" class="risk-result">Fill in balance, risk %, entry, and stop loss to calculate.</div>
-    </div>
 
-    <div class="card-header" style="margin-top:12px;"><div class="card-title">Recent Trades</div><div style="font-size:11px;color:var(--gold);cursor:pointer;" onclick="goPage('journal')">View All →</div></div>
-    <div id="dash-recent"></div>
-  </div>
+      <div class="panel">
+        <h3>Recent Trades</h3>
+        <div class="table-wrap">
+          <table id="recent-trades">
+            <thead>
+              <tr><th>Pair</th><th>Entry</th><th>SL</th><th>TP</th><th>Outcome</th><th>R</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-  <!-- CHECKLIST PAGE (unchanged from App A) -->
-  <div class="page" id="page-checklist">...</div>
-  <!-- JOURNAL PAGE (unchanged from App A, but removed screenshot) -->
-  <div class="page" id="page-journal">...</div>
-  <!-- ANALYTICS PAGE (unchanged) -->
-  <div class="page" id="page-analytics">...</div>
-  <!-- FUNDAMENTALS PAGE (unchanged) -->
-  <div class="page" id="page-fundamentals">...</div>
-  <!-- TRAINER PAGE (unchanged) -->
-  <div class="page" id="page-trainer">...</div>
-  <!-- SETTINGS PAGE (unchanged) -->
-  <div class="page" id="page-settings">...</div>
+    <!-- MACRO -->
+    <section class="view" id="view-macro">
+      <h2>Macro / Weekly Bias Engine</h2>
+      <p class="muted">Input macro data per currency to calculate strength bias.</p>
+
+      <div class="panel">
+        <div class="macro-grid" id="macro-grid"></div>
+        <div class="row-actions">
+          <button class="btn primary" id="btn-calc-macro">Calculate Strength</button>
+          <button class="btn ghost" id="btn-reset-macro">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STRENGTH -->
+    <section class="view" id="view-strength">
+      <h2>Currency Strength Ranking</h2>
+      <p class="muted">Strongest → Weakest based on macro inputs.</p>
+      <div class="panel">
+        <div id="strength-ranking" class="ranking"></div>
+      </div>
+    </section>
+
+    <!-- JOURNAL -->
+    <section class="view" id="view-journal">
+      <h2>Trade Journal</h2>
+      <div class="panel">
+        <h3>Add Trade</h3>
+        <div class="form-grid">
+          <div><label>Pair</label><input id="tr-pair" placeholder="EURUSD" /></div>
+          <div><label>Entry</label><input id="tr-entry" type="number" step="any" /></div>
+          <div><label>Stop Loss</label><input id="tr-sl" type="number" step="any" /></div>
+          <div><label>Take Profit</label><input id="tr-tp" type="number" step="any" /></div>
+          <div>
+            <label>Outcome</label>
+            <select id="tr-outcome">
+              <option value="Win">Win</option>
+              <option value="Loss">Loss</option>
+              <option value="BE">Break Even</option>
+            </select>
+          </div>
+          <div><label>R Multiple</label><input id="tr-r" type="number" step="any" placeholder="e.g. 2" /></div>
+          <div class="full-col"><label>Notes</label><textarea id="tr-notes" rows="2"></textarea></div>
+        </div>
+        <div class="row-actions">
+          <button class="btn primary" id="btn-add-trade">Add Trade</button>
+          <button class="btn ghost" id="btn-export-csv">Export CSV</button>
+          <button class="btn ghost" id="btn-export-pdf">Export PDF</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>All Trades</h3>
+        <div class="table-wrap">
+          <table id="all-trades">
+            <thead>
+              <tr><th>Date</th><th>Pair</th><th>Entry</th><th>SL</th><th>TP</th><th>Outcome</th><th>R</th><th>Notes</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RISK -->
+    <section class="view" id="view-risk">
+      <h2>Risk Calculator</h2>
+      <div class="panel">
+        <div class="form-grid">
+          <div><label>Account Balance ($)</label><input id="rc-balance" type="number" value="10000" /></div>
+          <div><label>Risk %</label><input id="rc-risk" type="number" value="1" step="0.1" /></div>
+          <div><label>Pair</label>
+            <select id="rc-pair">
+              <option>EURUSD</option><option>GBPUSD</option><option>AUDUSD</option>
+              <option>NZDUSD</option><option>USDJPY</option><option>USDCAD</option>
+              <option>USDCHF</option><option>EURJPY</option><option>GBPJPY</option>
+            </select>
+          </div>
+          <div><label>Entry</label><input id="rc-entry" type="number" step="any" /></div>
+          <div><label>Stop Loss</label><input id="rc-sl" type="number" step="any" /></div>
+          <div><label>Take Profit</label><input id="rc-tp" type="number" step="any" /></div>
+        </div>
+
+        <div class="calc-output">
+          <div><span class="label">Pip Distance (SL)</span><span class="value" id="out-pips">0</span></div>
+          <div><span class="label">Risk ($)</span><span class="value" id="out-risk">$0</span></div>
+          <div><span class="label">Reward ($)</span><span class="value" id="out-reward">$0</span></div>
+          <div><span class="label">R:R Ratio</span><span class="value" id="out-rr">0.00</span></div>
+          <div><span class="label">Lot Size (est)</span><span class="value" id="out-lot">0.00</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
-<!-- Firebase and App scripts -->
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- Firebase v8 CDN -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<!-- Paystack -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- App Scripts -->
 <script src="firebase.js"></script>
 <script src="app.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
 </body>
-</html>
+</html
