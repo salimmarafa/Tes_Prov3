@@ -1,0 +1,48 @@
+{
+  "name": "Trading Execution System",
+  "short_name": "TES Pro",
+  "description": "Institutional-grade trading workflow, journal, macro bias, currency strength, and analytics",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#050810",
+  "theme_color": "#f0b429",
+  "categories": ["finance", "productivity"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM2IiBmaWxsPSIjMGIxYTJiIi8+PHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9IlN5bmUiIGZvbnQtc2l6ZT0iODAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNmMGI0MjkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRFUzwvdGV4dD48L3N2Zz4=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMGIxYTJiIi8+PHRleHQgeD0iMjU2IiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJTeW5lIiBmb250LXNpemU9IjIxMCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iI2YwYjQyOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEVTPC90ZXh0Pjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Pre-Trade Checklist",
+      "short_name": "Checklist",
+      "description": "Open the pre-trade checklist",
+      "url": "./index.html#checklist"
+    },
+    {
+      "name": "Trade Journal",
+      "short_name": "Journal",
+      "description": "Log a new trade",
+      "url": "./index.html#journal"
+    },
+    {
+      "name": "Macro Bias",
+      "short_name": "Macro",
+      "description": "Currency strength & trade ideas",
+      "url": "./index.html#fundamentals"
+    }
+  ]
+}
